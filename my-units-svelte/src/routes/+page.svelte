@@ -1,0 +1,126 @@
+<script>
+    import Header from '$lib/components/Header.svelte';
+    import ConverterCard from '$lib/components/ConverterCard.svelte';
+    import HistoryDisplay from '$lib/components/HistoryDisplay.svelte';
+    import { unitCategories } from '$lib/utils/unitsData.js';
+    import { selectedCategoryKey, theme } from '$lib/stores/appStore.js';
+
+    let categories = Object.entries(unitCategories); // [key, data]
+</script>
+
+<div class="app-container" class:dark-mode={$theme === 'dark'}>
+    <Header />
+
+    <main>
+        <div class="category-selector">
+            <label for="category-select">Selecciona una categoría:</label>
+            <select id="category-select" bind:value={$selectedCategoryKey}>
+                {#each categories as [key, catData]}
+                    <option value={key}>{catData.name}</option>
+                {/each}
+            </select>
+        </div>
+
+        {#key $selectedCategoryKey} <ConverterCard categoryKey={$selectedCategoryKey} />
+        {/key}
+
+        <HistoryDisplay />
+    </main>
+
+    </div>
+
+<style global>
+    :root {
+        --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --secondary-hover-color: #5a6268;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --warning-color: #ffc107;
+
+        --bg-color: #f4f7f9;
+        --text-color: #212529;
+        --text-secondary-color: #6c757d;
+        --border-color: #ced4da;
+        --border-light-color: #e9ecef;
+        --card-bg: #ffffff;
+        --card-alt-bg: #f8f9fa;
+        --input-bg: #ffffff;
+        --shadow-color: rgba(0,0,0,0.07);
+        --header-bg: #e9ecef;
+        --header-text: #343a40;
+        --button-bg: #f8f9fa;
+        --button-text: #212529;
+        --button-hover-bg: #e2e6ea;
+    }
+
+    .dark-mode {
+        --bg-color: #515151;
+        --text-color: #e0e0e0;
+        --text-secondary-color: #aaaaaa;
+        --border-color: #444444;
+        --border-light-color: #333333;
+        --card-bg: #2a2a2a;
+        --card-alt-bg: #222222;
+        --input-bg: #333333;
+        --shadow-color: rgba(255,255,255,0.07);
+        --header-bg: #212121;
+        --header-text: #f0f0f0;
+        --button-bg: #383838;
+        --button-text: #e0e0e0;
+        --button-hover-bg: #484848;
+    }
+
+    body {
+        font-family: var(--font-family);
+        margin: 0;
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+        line-height: 1.6;
+    }
+
+    .app-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-color);
+    }
+
+    main {
+        flex-grow: 1;
+        max-width: 700px; /* O el ancho que prefieras */
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .category-selector {
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centra el selector */
+    }
+    .category-selector label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: var(--text-secondary-color);
+    }
+    .category-selector select {
+        padding: 0.7rem 1rem;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        font-size: 1.1rem;
+        min-width: 250px;
+        text-align: center;
+    }
+
+    button, input, select {
+        font-family: inherit;
+    }
+    * {
+        box-sizing: border-box;
+    }
+
+</style>
