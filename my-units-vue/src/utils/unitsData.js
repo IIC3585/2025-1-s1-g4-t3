@@ -1,4 +1,4 @@
-export const units = {
+export const unitCategories = {
     length: {
         name: 'Longitud',
         baseUnit: 'meter',

@@ -16,7 +16,7 @@
       <div class="input-group">
         <label :for="`${categoryKey}-unitA`">De:</label>
         <UnitSelector
-          :units="unitCategory.value"
+          :units="units"
           v-model:selectedUnitKey="unitA_key"
           :id="`${categoryKey}-unitA`"
           @change="handleUnitAChange"
@@ -40,7 +40,7 @@
       <div class="input-group">
         <label :for="`${categoryKey}-unitB`">A:</label>
         <UnitSelector
-          :units="unitCategory.value"
+          :units="units"
           v-model:selectedUnitKey="unitB_key"
           :id="`${categoryKey}-unitB`"
           @change="handleUnitBChange"
@@ -52,42 +52,48 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { units } from '@/utils/unitsData';
+import { unitCategories } from '@/utils/unitsData';
 import { convertUnit } from '@/utils/conversionUtils.js';
 import UnitSelector from './UnitSelector.vue';
 
 const props = defineProps({
-  categoryKey: String
+  categoryKey: String,
 });
 
-let prevCategoryKey = null;
 const category = ref(null);
-const unitCategory = ref({});
 const unitKeys = ref([]);
+const unitA_key = ref(null);
+const unitB_key = ref(null);
 const valueA = ref('');
 const valueB = ref('');
-const unitA_key = ref('');
-const unitB_key = ref('');
 const lastChanged = ref(null);
+const units = ref(null);
+const prevCategoryKey = ref(null);
 
-watch(() => props.categoryKey, (newKey) => {
-  if (newKey && newKey !== prevCategoryKey) {
-    category.value = unitCategory[newKey];
-    unitCategory.value = category.value.unitCategory;
-    unitKeys.value = Object.keys(unitCategory.value);
-    unitA_key.value = unitKeys.value[0];
-    unitB_key.value = unitKeys.value.length > 1 ? unitKeys.value[1] : unitKeys.value[0];
-    valueA.value = '';
-    valueB.value = '';
-    lastChanged.value = null;
-    prevCategoryKey = newKey;
-  }
-});
+watch(
+  () => props.categoryKey,
+  (newKey, prevKey) => {
+    if (newKey && newKey !== prevKey) {
+      category.value = unitCategories[newKey];
+      units.value = category.value.units;
+      unitKeys.value = Object.keys(units.value);
+      unitA_key.value = unitKeys.value[0];
+      unitB_key.value = unitKeys.value.length > 1 ? unitKeys.value[1] : unitKeys.value[0];
+      valueA.value = '';
+      valueB.value = '';
+      lastChanged.value = null;
+      prevCategoryKey.value = newKey;
+    }
+  },
+  { immediate: true }
+);
 
 watch([valueA, unitA_key, unitB_key], () => {
   if (lastChanged.value === 'A' && valueA.value !== '') {
     const r = convertUnit(valueA.value, unitA_key.value, unitB_key.value, props.categoryKey);
-    valueB.value = typeof r === 'number' ? r : '';
+    valueB.value = typeof r === 'number' && !isNaN(r) && isFinite(r) ? r : '';
+  } else if (valueA.value === '') {
+    valueB.value = '';
   }
 });
 

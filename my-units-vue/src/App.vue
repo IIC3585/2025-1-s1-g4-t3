@@ -26,16 +26,17 @@ import { ref, computed } from 'vue';
 import Header from './components/Header.vue';
 import ConverterCard from './components/ConverterCard.vue';
 import HistoryDisplay from './components/HistoryDisplay.vue';
-import { units } from './utils/unitsData.js';
+import { unitCategories } from './utils/unitsData.js';
 import { theme } from './stores/appStore.js';
 
-const categoryArray = Object.entries(units);
+const categoryArray = Object.entries(unitCategories);
 
 const selectedCategoryKey = ref(categoryArray[0][0]);
 
 const themeClass = computed(() => (theme.value === 'dark' ? 'dark-mode' : ''));
+
 </script>
 
-<style scoped>
+<style>
 @import './assets/styles.css'; /* Puedes dejar los estilos globales aquí o en otro archivo */
 </style>

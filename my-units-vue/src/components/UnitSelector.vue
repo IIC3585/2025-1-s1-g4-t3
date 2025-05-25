@@ -1,14 +1,18 @@
 <template>
-  <select :value="selectedUnit" @change="$emit('update:unit', $event.target.value)">
-    <option v-for="(label, key) in units" :key="key" :value="key">{{ label }}</option>
+  <select :value="selectedUnitKey" @change="$emit('update:selectedUnitKey', $event.target.value)">
+    <option v-for="(label, key) in units" :key="key" :value="key">
+      {{ label.name }} ({{ label.symbol }})
+    </option>
   </select>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
-import { units } from '../utils/unitsData';
 
-defineProps({
-  selectedUnit: String
+const props = defineProps({
+  units: Object,
+  id: String,
+  selectedUnitKey: String,
 });
+
 </script>
