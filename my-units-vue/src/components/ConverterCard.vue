@@ -55,6 +55,7 @@ import { ref, watch } from 'vue';
 import { unitCategories } from '@/utils/unitsData';
 import { convertUnit } from '@/utils/conversionUtils.js';
 import UnitSelector from './UnitSelector.vue';
+import { useHistoryStore } from '@/stores/useHistoryStore';
 
 const props = defineProps({
   categoryKey: String,
@@ -69,6 +70,9 @@ const valueB = ref('');
 const lastChanged = ref(null);
 const units = ref(null);
 const prevCategoryKey = ref(null);
+const debounceTimer = ref(null);
+
+const historyStore = useHistoryStore();
 
 watch(
   () => props.categoryKey,
@@ -92,6 +96,7 @@ watch([valueA, unitA_key, unitB_key], () => {
   if (lastChanged.value === 'A' && valueA.value !== '') {
     const r = convertUnit(valueA.value, unitA_key.value, unitB_key.value, props.categoryKey);
     valueB.value = typeof r === 'number' && !isNaN(r) && isFinite(r) ? r : '';
+    recordConversion(valueA.value, unitA_key.value, valueB.value, unitB_key.value);
   } else if (valueA.value === '') {
     valueB.value = '';
   }
@@ -119,6 +124,21 @@ function swapUnits() {
   [unitA_key.value, unitB_key.value] = [unitB_key.value, unitA_key.value];
   const result = convertUnit(originalValue, unitA_key.value, unitB_key.value, props.categoryKey);
   valueB.value = typeof result === 'number' ? result : '';
+  recordConversion(originalValue, unitA_key.value, valueB.value, unitB_key.value);
+}
+
+function recordConversion(valFrom, unitFromKey, valTo, unitToKey) {
+  clearTimeout(debounceTimer.value);
+  debounceTimer.value = setTimeout(() => {
+  if (valFrom && unitFromKey && valTo && unitToKey && category) {
+    historyStore.addToHistory({
+    id: Date.now(),
+    categoryName: category.name,
+    from: `${valFrom} ${units.value[unitFromKey].symbol}`,
+    to:   `${valTo}   ${units.value[unitToKey].symbol}`
+    });
+  }
+  }, 500);
 }
 </script>
 
