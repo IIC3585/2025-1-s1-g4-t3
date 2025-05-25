@@ -1,0 +1,63 @@
+:root {
+  --bg-color: #f4f7f9;
+  --text-color: #212529;
+  --text-secondary-color: #6c757d;
+  --border-color: #ced4da;
+  --input-bg: #ffffff;
+  --card-bg: #ffffff;
+  --button-bg: #f8f9fa;
+  --button-text: #212529;
+  --button-hover-bg: #e2e6ea;
+  --header-bg: #e9ecef;
+  --header-text: #343a40;
+}
+
+.dark-mode {
+  --bg-color: #515151;
+  --text-color: #e0e0e0;
+  --text-secondary-color: #aaaaaa;
+  --border-color: #444444;
+  --input-bg: #333333;
+  --card-bg: #2a2a2a;
+  --button-bg: #383838;
+  --button-text: #e0e0e0;
+  --button-hover-bg: #484848;
+  --header-bg: #212121;
+  --header-text: #f0f0f0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+}
+
+.category-selector {
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centra el selector */
+    }
+    .category-selector label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: var(--text-secondary-color);
+    }
+    .category-selector select {
+        padding: 0.7rem 1rem;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        font-size: 1.1rem;
+        min-width: 250px;
+        text-align: center;
+    }
